@@ -150,7 +150,7 @@ class HistogramMarginalCalibrator:
             probs: A sequence of dimension (n, k) where n is the number of
                 data points, and k is the number of classes, representing
                 the output probabilities/confidences of the uncalibrated
-                model.
+                graph.
             labels: A sequence of length n, where n is the number of data points,
                 representing the ground truth label for each data point.
         """
@@ -161,7 +161,7 @@ class HistogramMarginalCalibrator:
         labels_one_hot = get_labels_one_hot(np.array(labels), self._k)
         self._calibrators = []
         for c in range(self._k):
-            # For each class c, get the probabilities the model output for that class, and whether
+            # For each class c, get the probabilities the graph output for that class, and whether
             # the data point was actually class c, or not.
             probs_c = probs[:, c]
             labels_c = labels_one_hot[:, c]
@@ -195,7 +195,7 @@ class PlattBinnerMarginalCalibrator:
             probs: A sequence of dimension (n, k) where n is the number of
                 data points, and k is the number of classes, representing
                 the output probabilities/confidences of the uncalibrated
-                model.
+                graph.
             labels: A sequence of length n, where n is the number of data points,
                 representing the ground truth label for each data point.
         """
@@ -209,7 +209,7 @@ class PlattBinnerMarginalCalibrator:
         self._platts = []
         self._calibrators = []
         for c in range(self._k):
-            # For each class c, get the probabilities the model output for that class, and whether
+            # For each class c, get the probabilities the graph output for that class, and whether
             # the data point was actually class c, or not.
             probs_c = probs[:, c]
             labels_c = labels_one_hot[:, c]

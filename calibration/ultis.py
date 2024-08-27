@@ -65,8 +65,8 @@ def get_calibration_error_uncertainties(probs, labels, p=2, alpha=0.1, mode='mar
 
     Args:
         probs: A numpy array of shape (n,) or (n, k). If the shape is (n,) then
-            we assume binary classification and probs[i] is the model's confidence
-            the i-th example is 1. Otherwise, probs[i][j] is the model's confidence
+            we assume binary classification and probs[i] is the graph's confidence
+            the i-th example is 1. Otherwise, probs[i][j] is the graph's confidence
             the i-th example is j, with 0 <= probs[i][j] <= 1.
         labels: A numpy array of shape (n,). labels[i] denotes the label of the i-th
             example. In the binary classification setting, labels[i] must be 0 or 1,
@@ -74,7 +74,7 @@ def get_calibration_error_uncertainties(probs, labels, p=2, alpha=0.1, mode='mar
         p: We measure the lp calibration error, where p >= 1 is an integer.
         mode: 'marginal' or 'top-label'. 'marginal' calibration means we compute the
             calibraton error for each class and then average them. Top-label means
-            we compute the calibration error of the prediction that the model is most
+            we compute the calibration error of the prediction that the graph is most
             confident about.
 
     Returns:
@@ -100,8 +100,8 @@ def get_calibration_error(probs, labels, p=2, debias=True, mode='marginal'):
 
     Args:
         probs: A numpy array of shape (n,) or (n, k). If the shape is (n,) then
-            we assume binary classification and probs[i] is the model's confidence
-            the i-th example is 1. Otherwise, probs[i][j] is the model's confidence
+            we assume binary classification and probs[i] is the graph's confidence
+            the i-th example is 1. Otherwise, probs[i][j] is the graph's confidence
             the i-th example is j, with 0 <= probs[i][j] <= 1.
         labels: A numpy array of shape (n,). labels[i] denotes the label of the i-th
             example. In the binary classification setting, labels[i] must be 0 or 1,
@@ -111,7 +111,7 @@ def get_calibration_error(probs, labels, p=2, debias=True, mode='marginal'):
             has provably better sample complexity.
         mode: 'marginal' or 'top-label'. 'marginal' calibration means we compute the
             calibration error for each class and then average them. Top-label means
-            we compute the calibration error of the prediction that the model is most
+            we compute the calibration error of the prediction that the graph is most
             confident about.
 
     Returns:
@@ -134,12 +134,12 @@ def lower_bound_scaling_top_ce(probs, labels, p=2, debias=True, num_bins=15,
 
 def lower_bound_scaling_ce(probs, labels, p=2, debias=True, num_bins=15,
                            binning_scheme=get_equal_bins, mode='marginal'):
-    """Lower bound the calibration error of a model with continuous outputs.
+    """Lower bound the calibration error of a graph with continuous outputs.
 
     Args:
         probs: A numpy array of shape (n,) or (n, k). If the shape is (n,) then
-            we assume binary classification and probs[i] is the model's confidence
-            the i-th example is 1. Otherwise, probs[i][j] is the model's confidence
+            we assume binary classification and probs[i] is the graph's confidence
+            the i-th example is 1. Otherwise, probs[i][j] is the graph's confidence
             the i-th example is j, with 0 <= probs[i][j] <= 1.
         labels: A numpy array of shape (n,). labels[i] denotes the label of the i-th
             example. In the binary classification setting, labels[i] must be 0 or 1,
@@ -152,7 +152,7 @@ def lower_bound_scaling_ce(probs, labels, p=2, debias=True, num_bins=15,
             and outputs a list of bins. See get_equal_bins, get_equal_prob_bins for examples.
         mode: 'marginal' or 'top-label'. 'marginal' calibration means we compute the
             calibraton error for each class and then average them. Top-label means
-            we compute the calibration error of the prediction that the model is most
+            we compute the calibration error of the prediction that the graph is most
             confident about.
 
     Returns:
@@ -168,12 +168,12 @@ def get_binning_top_ce(probs, labels, p=2, debias=True, mode='marginal'):
 
 
 def get_binning_ce(probs, labels, p=2, debias=True, mode='marginal'):
-    """Estimate the calibration error of a binned model.
+    """Estimate the calibration error of a binned graph.
 
     Args:
         probs: A numpy array of shape (n,) or (n, k). If the shape is (n,) then
-            we assume binary classification and probs[i] is the model's confidence
-            the i-th example is 1. Otherwise, probs[i][j] is the model's confidence
+            we assume binary classification and probs[i] is the graph's confidence
+            the i-th example is 1. Otherwise, probs[i][j] is the graph's confidence
             the i-th example is j, with 0 <= probs[i][j] <= 1.
         labels: A numpy array of shape (n,). labels[i] denotes the label of the i-th
             example. In the binary classification setting, labels[i] must be 0 or 1,
@@ -183,7 +183,7 @@ def get_binning_ce(probs, labels, p=2, debias=True, mode='marginal'):
             has provably better sample complexity.
         mode: 'marginal' or 'top-label'. 'marginal' calibration means we compute the
             calibraton error for each class and then average them. Top-label means
-            we compute the calibration error of the prediction that the model is most
+            we compute the calibration error of the prediction that the graph is most
             confident about.
 
     Returns:

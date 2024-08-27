@@ -337,7 +337,7 @@ class BaseMethod:
         # Load data
         train_transforms, test_transforms = self.prepare_transforms()
         train_loader, val_loader, test_loader = self.loaders(self.dataset, train_transforms, test_transforms)
-        # Load pretrained model if already exists and not overwriting
+        # Load pretrained graph if already exists and not overwriting
         if self.final_model_path.exists() and not self.overwrite:
             print(f'EXPERIMENT {self.experiment_name} EXISTS!')
             print(f'TESTING ONLY')
@@ -347,7 +347,7 @@ class BaseMethod:
             self.test(test_loader)
 
     def folders(self):
-        models_path, figures_path, metrics_out_path = make_experimental_folders(self.results_path, self.experiment_name, self.configs)
+        models_path, figures_path, metrics_out_path = make_experimental_folders(self.results_path, self.experiment_name)
         final_model_path = models_path / 'final_model.pt'
         results_csv_file = f'results_{self.experiment_name}.csv'
         return final_model_path, figures_path, metrics_out_path, results_csv_file, models_path
