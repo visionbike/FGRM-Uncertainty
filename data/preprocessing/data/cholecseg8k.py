@@ -111,7 +111,7 @@ class CholecSeg8k:
         sum_pixels = np.zeros(3, dtype=np.float32)
         sum_squared_pixels = np.zeros(3, dtype=np.float32)
         num_pixels = float(list_images_trainval.shape[0] * list_images_trainval.shape[1] * list_images_trainval.shape[2])
-        for image in list_images_trainval:
+        for image in tqdm(list_images_trainval, total=list_images_trainval.shape[0], file=sys.stdout):
             sum_pixels += np.sum(image, axis=(0, 1))
             sum_squared_pixels += np.sum(image ** 2, axis=(0, 1))
         mean = sum_pixels / num_pixels

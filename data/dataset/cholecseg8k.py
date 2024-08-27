@@ -10,6 +10,7 @@ __all__ = ["CholecSeg8kDataset"]
 
 class CholecSeg8kDataset(Dataset):
     def __init__(self, root: str, phase: str) -> None:
+        super().__init__()
         data = np.load(f"{root}/data_{phase}.npz", allow_pickle=True)
         self.images = data["image"]
         self.labels = data["label"]

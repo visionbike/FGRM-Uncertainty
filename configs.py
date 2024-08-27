@@ -21,8 +21,8 @@ if 'LC' in EXPERIMENT_NAME:
 
 wandb_active = True
 NUM_CLASSES = 5
-ROOT_PATH = Path('/research/d5/gds/hzyang22/project/')
-SOURCE_CODE_PATH = ROOT_PATH / 'code'
+ROOT_PATH = Path('./')
+SOURCE_CODE_PATH = ROOT_PATH
 
 DEVICE = torch.device('cuda') if torch.cuda.is_available() else 'cpu'
 
