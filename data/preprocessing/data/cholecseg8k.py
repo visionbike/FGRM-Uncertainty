@@ -53,7 +53,7 @@ class CholecSeg8k:
         #
         self.list_path_filenames = []
 
-    def load_and_split_data(self) -> None:
+    def load_data(self) -> None:
         # get list of file names of images
         for subdir in sorted(self.path_raw.iterdir()):
             for imgdir in sorted(subdir.iterdir()):
