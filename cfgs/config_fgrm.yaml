@@ -1,6 +1,6 @@
 # Experiment Configuration
 ExpConfig:
-  name: "EDL"
+  name: "FGRM"
   experiment: 1
   cudnn_benchmark: True
   seed: 13

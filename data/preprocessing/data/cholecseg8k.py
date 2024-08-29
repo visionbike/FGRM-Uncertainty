@@ -126,7 +126,7 @@ class CholecSeg8k:
         list_images_val = (list_images_val - mean) / std
         list_images_test = (list_images_test - mean) / std
 
-        print("Saving to data...")
+        print("# Saving to data...")
         np.savez(str(self.path_processed / "data_train.npz"), image=list_images_train, label=list_labels_train, name=list_path_images_train)
         np.savez(str(self.path_processed / "data_val.npz"), image=list_images_val, label=list_labels_val, name=list_path_images_val)
         np.savez(str(self.path_processed / "data_test.npz"), image=list_images_test, label=list_labels_test, name=list_path_images_test)
