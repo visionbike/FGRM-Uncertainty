@@ -4,12 +4,13 @@ ExpConfig:
   experiment: 1
   cudnn_benchmark: True
   seed: 13
-  num_epochs: 100
+  num_epochs: 1
   summary: True
   log: "wandb"      # "wandb"
   device_id: 0   # -1, 1, 2, ...
   task: "segmentation"
-  edl_uncertainty: True
+  edl_model_path: "./EDL_cholecseg8k_dice_evidence_u_1/models/final_model.pt"
+  edl_uncertainty: False
 # Data configuration
 DataConfig:
   name: "cholecseg8k"
@@ -19,7 +20,7 @@ DataConfig:
   num_workers: 2
 # Criterion Configuration
 LossConfig:
-  name: "dice_evidence_u"
+  name: "policy_gradient"
 # Optimizer Configuration
 OptimConfig:
   lr: 0.0001

@@ -1,3 +1,4 @@
+import copy
 from typing import Tuple
 import numpy as np
 import torch
@@ -12,15 +13,17 @@ class CholecSeg8kDataset(Dataset):
     def __init__(self, root: str, phase: str) -> None:
         super().__init__()
         data = np.load(f"{root}/data_{phase}.npz", allow_pickle=True)
-        self.images = data["image"]
-        self.labels = data["label"]
-        self.fnames = data["name"]
+        self.images = copy.deepcopy(data["image"])
+        self.labels = copy.deepcopy(data["label"])
+        self.fnames = copy.deepcopy(data["name"])
         self.transforms = Compose(
             [
                 ToTensorV2()
             ],
             is_check_shapes=True
         )
+
+        del data
 
     def __len__(self) -> int:
         return self.images.shape[0]

@@ -1,11 +1,12 @@
 import torch
+import torch.nn as nn
 import torch.nn.functional as nfn
 from graph.loss import DiceLoss, KLLoss
 
 __all__ = ["DiceEvidenceULoss"]
 
 
-class DiceEvidenceULoss(torch.nn.Module):
+class DiceEvidenceULoss(nn.Module):
     def __init__(self, num_classes: int, step_lambda: int, step_total: int, eps: bool, disentangle: bool):
         super(DiceEvidenceULoss, self).__init__()
         self.dice = DiceLoss()

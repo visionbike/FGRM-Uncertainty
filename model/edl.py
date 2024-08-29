@@ -14,21 +14,23 @@ from graph.scheduler import EarlyStopping
 from graph.metric import Metrics
 from data import get_dataloader
 
+__all__ = ["EDLModel"]
+
 
 class EDLModel:
     def __init__(self, configs):
         self.configs = configs
         if self.configs.ExpConfig.log == "wandb":
             self.run = wandb.init(
-                project="uncertainty_estimation",
+                project="edl_uncertainty_estimation",
                 name=self.configs.ExpConfig.exp_name,
                 config={
                     "method": self.configs.LossConfig.name,
                     "lambda_epochs": self.configs.SchedulerConfig.num_epochs_lambda,
-                    'total_epochs': self.configs.ExpConfig.num_epochs,
-                    'AU_warmup': self.configs.SchedulerConfig.au_warmup,
-                    'experiment_name': self.configs.exp_name,
-                    'lr': self.configs.OptimConfig.lr,
+                    "total_epochs": self.configs.ExpConfig.num_epochs,
+                    "AU_warmup": self.configs.SchedulerConfig.au_warmup,
+                    "experiment_name": self.configs.ExpConfig.exp_name,
+                    "lr": self.configs.OptimConfig.lr,
                 }
             )
 
@@ -37,6 +39,7 @@ class EDLModel:
         self.optimizer = None
         self.scheduler = None
         self.metrics = None
+        self.early_stopping = None
 
     def prepare_model(self, model_path: None | str = None):
         model = get_network(
@@ -89,9 +92,10 @@ class EDLModel:
             True,
             self.configs.DataConfig.num_workers
         )
-        loader_val = get_dataloader(self.configs.DataConfig.path,
+        loader_val = get_dataloader(
+            self.configs.DataConfig.path,
             self.configs.DataConfig.name,
-            "train",
+            "val",
             self.configs.DataConfig.batch_size,
             True,
             self.configs.DataConfig.num_workers
@@ -106,18 +110,18 @@ class EDLModel:
 
         self.train_EDL(loader_train, loader_val)
 
-        if run_test:
-            # Run testing
-            loader_test = get_dataloader(
-                self.configs.DataConfig.path,
-                self.configs.DataConfig.name,
-                "train",
-                self.configs.DataConfig.batch_size,
-                True,
-                self.configs.DataConfig.num_workers
-            )
-
-            self.test(loader_test)
+        # if run_test:
+        #     # Run testing
+        #     loader_test = get_dataloader(
+        #         self.configs.DataConfig.path,
+        #         self.configs.DataConfig.name,
+        #         "train",
+        #         self.configs.DataConfig.batch_size,
+        #         True,
+        #         self.configs.DataConfig.num_workers
+        #     )
+        #
+        #     self.test(loader_test)
 
     def train_EDL(self, loader_train: DataLoader, loader_val: DataLoader) -> Tuple[float, float]:
         train_loss, val_loss = 0., 0.
@@ -145,10 +149,10 @@ class EDLModel:
             # Push to tensorboard if enabled
 
             if self.early_stopping.early_stop:
-                print(f'EARLY STOPPING at EPOCH {epoch + 1}')
+                print(f"EARLY STOPPING at EPOCH {epoch + 1}")
                 break
 
-        torch.save(self.model.state_dict(), self.configs.ExpConfig.model_path)
+        torch.save(self.model.state_dict(), f"{self.configs.ExpConfig.model_path}/final_model.pt")
         return train_loss, val_loss
 
     def train_EDL_epoch(self, model: nn.Module, loader_train: DataLoader, optimizer: optim.Optimizer, epoch: int) -> Tuple[float, np.ndarray]:
@@ -179,7 +183,7 @@ class EDLModel:
         val_mi = []
         with torch.no_grad():
             for batch_idx, (image, label, _) in enumerate(tqdm(loader_val, total=len(loader_val), file=sys.stdout)):
-                data, target = data.to(self.configs.ExpConfig.device), target.cuda(self.configs.ExpConfig.device)
+                data, label = data.to(self.configs.ExpConfig.device), label.cuda(self.configs.ExpConfig.device)
                 outputs = model(data)
                 evidence = nfn.softplus(outputs, beta=20)
                 alpha = evidence + 1
@@ -187,20 +191,20 @@ class EDLModel:
                 edl_u = self.configs.NUM_CLASSES / torch.sum(alpha, dim=1, keepdim=False)
 
                 seg = torch.argmax(evidence.squeeze(), dim=1).detach().cpu().numpy()
-                lbl = target.squeeze().detach().cpu().numpy()
+                lbl = label.squeeze().detach().cpu().numpy()
                 evals = self.metrics.get_evaluations(
                     seg,
                     lbl,
                     evidence.detach().cpu().numpy(),
                     soft_output.detach().cpu().numpy(),
-                    target.detach().cpu().numpy(),
+                    label.detach().cpu().numpy(),
                     edl_u.detach().cpu().numpy()
                 )
                 val_dice.append(evals["dsc_seg"])
                 val_ece.append(evals["ece"])
                 val_mi.append(evals["mi"])
 
-                total_loss = self.criterion(target, alpha, evidence, epoch)
+                total_loss = self.criterion(label, alpha, evidence, epoch)
 
                 total_loss = torch.mean(total_loss)
                 val_loss += total_loss.item()

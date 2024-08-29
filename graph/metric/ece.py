@@ -50,7 +50,6 @@ class ECE(nn.Module):
             num_classes = softmax.shape[1]
             debiased_ece = torch.zeros(batch_size)
             for i in range(batch_size):
-
                 zs = np.reshape(torch.tensor(softmax[i]).permute(1, 2, 0).numpy(), (-1, num_classes))
                 ys = np.reshape(label[i], (-1, ))
                 debiased_ece[i] = get_calibration_error(zs, ys)

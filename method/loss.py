@@ -473,6 +473,7 @@ def policy_gradient_loss_ece_density(edl_uncertainty, edl_u, p, alpha, evidence,
     loss_ece = - log_probs.to(device) * ece.to(device)
     return loss_ece
 
+
 def nll_evidence_loss(p, alpha, c):
     alpha = alpha.view(alpha.size(0), alpha.size(1), -1)  # [N, C, HW]
     alpha = alpha.transpose(1, 2)  # [N, HW, C]

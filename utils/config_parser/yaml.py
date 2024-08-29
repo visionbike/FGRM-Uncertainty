@@ -4,6 +4,7 @@ from pathlib import Path
 import torch
 from yacs.config import CfgNode as cn
 from utils.config_parser.base import *
+from utils import make_experimental_folders
 
 __all__ = ["ConfigParserYaml"]
 
@@ -36,7 +37,7 @@ class ConfigParserYaml(ConfigParserBase, ABC):
 
     def __init__(self, description: str):
         """
-        :paramdescription: the description for the parser.
+        :param description: the description for the parser.
         """
         super().__init__()
         self.parser.description = description
@@ -64,54 +65,14 @@ class ConfigParserYaml(ConfigParserBase, ABC):
             cfgs = cn.load_cfg(f)
             print(f"Successfully loading the config YAML file!")
         # initiate experiment configs
-        exp_tags = []    # tags
-        exp_name = ""    # exp name
-        if "DataConfig" in cfgs.keys():
-            # setup experiment name and config
-            data_tags = cfgs.DataConfig.name.split("_")
-            exp_tags += data_tags
-            exp_name += cfgs.DataConfig.name
-            # setup data name
-            cfgs.DataConfig.name = data_tags[0]
-            # setup num_classes
-            if not cfgs.DataConfig.dataset_kwargs.use_rest_label:
-                cfgs.DataConfig.num_classes -= 1
-            # setup data validation mode
-            cfgs.DataConfig.mode = cfgs.ExpConfig.split
-        num_classes = cfgs.DataConfig.pop("num_classes")
-        #
-        if "NetworkConfig" in cfgs.keys():
-            exp_name += "_" + cfgs.NetworkConfig.name + "_" + cfgs.NetworkConfig.attn_kwargs.name
-            exp_tags += [cfgs.NetworkConfig.name]
-            exp_tags += ["attn_" + cfgs.NetworkConfig.attn_kwargs.name if cfgs.NetworkConfig.attn_kwargs.name != "none" else cfgs.NetworkConfig.attn_kwargs.name]
-            cfgs.NetworkConfig.num_classes = num_classes
-        #
-        if "LossConfig" in cfgs.keys():
-            exp_tags += [cfgs.LossConfig.name]
-            if cfgs.LossConfig.name == "focal":
-                cfgs.LossConfig.alpha = get_class_weights(num_classes, cfgs.LossConfig.alpha)
-            cfgs.LossConfig.num_classes = num_classes
-
-        if "OptimConfig" in cfgs.keys():
-            exp_tags += [cfgs.OptimConfig.name]
-
-        if "LrSchedulerConfig" in cfgs.keys():
-            exp_tags += [cfgs.LRSchedulerConfig.name]
-
-        cfgs.MetricConfig = cn()
-        cfgs.MetricConfig.num_classes = num_classes
-
-        if "ExpConfig" in cfgs.keys():
-            # name
-            cfgs.ExpConfig.name = exp_name + "_" + cfgs.ExpConfig.split + "_exp" + str(cfgs.ExpConfig.experiment)
-            cfgs.ExpConfig.tags = exp_tags + [cfgs.ExpConfig.split]
-            # create "experiment" directory
-            exp_path = Path("./experiments") / cfgs.ExpConfig.name
-            exp_path.mkdir(parents=True, exist_ok=True)
-            if not (exp_path / f"config.yaml").exists():
-                shutil.copyfile(self.args.cfg, exp_path / f"config.yaml")
-            # setup experiment configs
-            cfgs.ExpConfig.exp_path = str(exp_path)
+        cfgs.ExpConfig.exp_name = f"{cfgs.ExpConfig.name}_{cfgs.DataConfig.name}_{cfgs.LossConfig.name}_{cfgs.ExpConfig.experiment}"
+        save_path = Path("./results")
+        save_path.mkdir(parents=True, exist_ok=True)
+        cfgs.ExpConfig.exp_path, cfgs.ExpConfig.model_path, cfgs.ExpConfig.figure_path, cfgs.ExpConfig.metric_path = make_experimental_folders(str(save_path), cfgs.ExpConfig.exp_name)
+        # get device
+        cfgs.ExpConfig.device = "cpu" if cfgs.ExpConfig.device_id == -1 else f"cuda:{cfgs.ExpConfig.device_id}"
+        if not (Path(cfgs.ExpConfig.exp_path) / f"config.yaml").exists():
+            shutil.copyfile(self.args.cfg, f"{cfgs.ExpConfig.exp_path}/config.yaml")
 
         # print configurations
         print(f"### Configurations:\n{cfgs}")
