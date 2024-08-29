@@ -17,7 +17,7 @@ def get_criterion(name: str, **kwargs) -> nn.Module:
     criterion = None
     if name == "dice_evidence_u":
         criterion = DiceEvidenceULoss(**kwargs)
-    if name == "policy_gradient":
+    elif name == "policy_gradient":
         criterion = PolicyGradientECECalibrationLoss(**kwargs)
     else:
         raise NotImplementedError

@@ -183,7 +183,7 @@ class EDLModel:
         val_mi = []
         with torch.no_grad():
             for batch_idx, (image, label, _) in enumerate(tqdm(loader_val, total=len(loader_val), file=sys.stdout)):
-                data, label = data.to(self.configs.ExpConfig.device), label.cuda(self.configs.ExpConfig.device)
+                data, label = data.to(self.configs.ExpConfig.device), label.to(self.configs.ExpConfig.device)
                 outputs = model(data)
                 evidence = nfn.softplus(outputs, beta=20)
                 alpha = evidence + 1
