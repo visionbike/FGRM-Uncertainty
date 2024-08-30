@@ -77,7 +77,7 @@ class EarlyStopping:
         self.patience = patience
         self.verbose = verbose
         self.counter = 0
-        self.best_score = -np.inf
+        self.best_score = None
         self.early_stop = False
         self.val_loss_min = np.inf
         self.delta = delta
@@ -90,6 +90,8 @@ class EarlyStopping:
         :return:
         """
         score = -val_loss
+        if self.best_score is None:
+            self.best_score = score
         if score < self.best_score + self.delta:
             self.counter += 1
             self.trace_func(f"EarlyStopping counter: {self.counter} out of {self.patience}")

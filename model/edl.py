@@ -145,7 +145,7 @@ class EDLModel:
                            "annealing_au": annealing_AU, "annealing_coef": annealing_coef})
             #
             self.scheduler.step(val_loss)
-            self.early_stopping(val_loss, self.model)
+            self.early_stopping(val_loss)
             # Push to tensorboard if enabled
             if self.early_stopping.early_stop:
                 print(f"EARLY STOPPING at EPOCH {epoch + 1}")
