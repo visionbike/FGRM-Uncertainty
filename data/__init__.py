@@ -10,4 +10,4 @@ def get_dataloader(root: str, name: str, phase: str, batch_size: int, shuffle: b
         dataset_ = CholecSeg8kDataset(root, phase=phase)
     else:
         raise ValueError(f"Dataset not supported! Got dataset name: {name}.")
-    return DataLoader(dataset_, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, pin_memory=True, persistent_workers=True)
+    return DataLoader(dataset_, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, pin_memory=True, persistent_workers=True, drop_last=True)
