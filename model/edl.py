@@ -139,7 +139,7 @@ class EDLModel:
             annealing_AU = min(1, annealing_AU)
 
             # Update scheduler and early stopping
-            if self.configs.log == "wandb":
+            if self.configs.ExpConfig.log == "wandb":
                 wandb.log({"training_loss": all_head_losses, "val dice": val_dice,
                            "val ece": val_ece, "val mi": val_mi,
                            "annealing_au": annealing_AU, "annealing_coef": annealing_coef})
@@ -147,7 +147,6 @@ class EDLModel:
             self.scheduler.step(val_loss)
             self.early_stopping(val_loss, self.model)
             # Push to tensorboard if enabled
-
             if self.early_stopping.early_stop:
                 print(f"EARLY STOPPING at EPOCH {epoch + 1}")
                 break
@@ -192,8 +191,6 @@ class EDLModel:
 
                 seg = torch.argmax(evidence.squeeze(), dim=1).detach().cpu().numpy()
                 lbl = label.squeeze().detach().cpu().numpy()
-                if batch_idx in [322, 323]:
-                    print(seg.shape, lbl.shape)
                 evals = self.metrics.get_evaluations(
                     seg,
                     lbl,
