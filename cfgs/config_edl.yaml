@@ -19,7 +19,7 @@ DataConfig:
   num_workers: 2
 # Criterion Configuration
 LossConfig:
-  name: " "
+  name: "dice_evidence_u"
 # Optimizer Configuration
 OptimConfig:
   lr: 0.0001
