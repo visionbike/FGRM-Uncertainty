@@ -158,7 +158,7 @@ class EDLModel:
         model.train()
         train_loss = 0.
         losses = []
-        for idx, (image, label, _) in enumerate(tqdm(loader_train, total=len(loader_train), file=sys.stdout)):
+        for idx, (image, label, _) in enumerate(tqdm(loader_train, total=len(loader_train), file=sys.stdout, desc=f"Training epoch {epoch}:")):
             image, label = image.to(self.configs.ExpConfig.device), label.to(self.configs.ExpConfig.device)
             optimizer.zero_grad()
             outputs = model(image)
@@ -181,7 +181,7 @@ class EDLModel:
         val_ece = []
         val_mi = []
         with torch.no_grad():
-            for batch_idx, (image, label, _) in enumerate(tqdm(loader_val, total=len(loader_val), file=sys.stdout)):
+            for batch_idx, (image, label, _) in enumerate(tqdm(loader_val, total=len(loader_val), file=sys.stdout, desc=f"Validation epoch {epoch}:")):
                 image, label = image.to(self.configs.ExpConfig.device), label.to(self.configs.ExpConfig.device)
                 outputs = model(image)
                 evidence = nfn.softplus(outputs, beta=20)
