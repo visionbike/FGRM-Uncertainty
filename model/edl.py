@@ -192,6 +192,8 @@ class EDLModel:
 
                 seg = torch.argmax(evidence.squeeze(), dim=1).detach().cpu().numpy()
                 lbl = label.squeeze().detach().cpu().numpy()
+                if batch_idx == 323:
+                    print(seg.shape, lbl.shape)
                 evals = self.metrics.get_evaluations(
                     seg,
                     lbl,

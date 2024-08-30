@@ -11,7 +11,7 @@ class DiceScore(nn.Module):
         self.activation = activation
         self.num_classes = num_classes
 
-    def forward(self, predicts: torch.Tensor, targets: torch.Tensor, ) -> float:
+    def forward(self, predicts: torch.Tensor, targets: torch.Tensor) -> float:
         batch_size = predicts.shape[0]
         all_dice = torch.zeros(batch_size)
         seg_pred = torch.from_numpy(predicts)
