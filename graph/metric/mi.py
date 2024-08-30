@@ -82,7 +82,7 @@ class MI(nn.Module):
         evidence = torch.from_numpy(evidence)
         labels = torch.from_numpy(labels)
         _, predicts = torch.max(evidence, 1)
-        match = torch.eq(predicts, labels)
+        match = torch.eq(predicts, labels).float()
         match = match.unsqueeze(1)
         alpha = evidence + 1
         expected_prob = torch.nn.functional.normalize(alpha, p=1, dim=1)
