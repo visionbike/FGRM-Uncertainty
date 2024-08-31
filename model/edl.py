@@ -48,7 +48,7 @@ class EDLModel:
             encoder_weights=None
         )
         if model_path is not None:
-            model.load_weights(torch.load(model_path))
+            model.load_state_dict(torch.load(model_path))
         model.to(self.configs.ExpConfig.device)
         return model
 
