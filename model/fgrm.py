@@ -146,6 +146,10 @@ class FGRMModel:
             if val_ece < best_val_ece:
                 best_val_ece = val_ece
 
+            if self.configs.ExpConfig.log == "wandb":
+                wandb.log({"training_loss": all_head_losses, "val dice": val_dice,
+                           "val ece": val_ece, "val mi": val_mi})
+
             print(f"val dice : {val_dice:.6f} val ece : {val_ece:.6f} val mi : {val_mi:.6f}.")
             print(f"Best val dice : {best_val_dice:.6f} Best val ece : {best_val_ece:.6f} Best val mi : {best_val_mi:.6f}.")
 

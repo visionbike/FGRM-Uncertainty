@@ -9,7 +9,7 @@ ExpConfig:
   log: "wandb"      # "wandb"
   device_id: 0   # -1, 1, 2, ...
   task: "segmentation"
-  edl_model_path: "./EDL_cholecseg8k_dice_evidence_u_1/models/final_model.pt"
+  edl_model_path: "./results/EDL_cholecseg8k_dice_evidence_u_1/models/final_model.pt"
   edl_uncertainty: False
 # Data configuration
 DataConfig:
