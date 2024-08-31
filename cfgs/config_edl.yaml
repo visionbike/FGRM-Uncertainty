@@ -4,7 +4,7 @@ ExpConfig:
   experiment: 1
   cudnn_benchmark: True
   seed: 13
-  num_epochs: 100
+  num_epochs: 10
   summary: True
   log: "wandb"      # "wandb"
   device_id: 0   # -1, 1, 2, ...
