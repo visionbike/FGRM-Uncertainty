@@ -88,7 +88,7 @@ class FGRMModel:
             outputs = model(image)
             evidence = nfn.softplus(outputs, beta=20)
             alpha = evidence + 1
-            edl_u = self.configs.NUM_CLASSES / torch.sum(alpha, dim=1, keepdim=False)
+            edl_u = self.configs.DataConfig.num_classes / torch.sum(alpha, dim=1, keepdim=False)
             reward = torch.mean(self.criterion(edl_u, label, alpha, evidence))
             total_loss = reward
             total_loss = torch.mean(total_loss)
