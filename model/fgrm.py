@@ -207,7 +207,7 @@ class FGRMModel:
                 outputs = model(image)
                 evidence = nfn.softplus(outputs, beta=20)
                 alpha = evidence + 1
-                edl_u = self.configs.NUM_CLASSES / torch.sum(alpha, dim=1, keepdim=False)
+                edl_u = self.configs.DataConfig.num_classes / torch.sum(alpha, dim=1, keepdim=False)
                 soft_output = nfn.normalize(alpha, p=1, dim=1)
 
                 seg = torch.argmax(evidence.squeeze(), dim=1).detach().cpu().numpy()
